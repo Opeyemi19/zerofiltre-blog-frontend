@@ -25,9 +25,10 @@ data:
   BANNER_BACKGROUND_COLOR: '#052b5d'
   #define otel env variables here
   #  OTEL_TRACES_EXPORTER: ...
-  #  OTEL_EXPORTER_OTLP_ENDPOINT: "http://..."
+  OTEL_EXPORTER_OTLP_PROTOCOL: "grpc"
+  OTEL_EXPORTER_OTLP_ENDPOINT: "http://otelcol-opentelemetry-collector.zerofiltre-bootcamp.svc.cluster.local:4317"
   OTEL_NODE_RESOURCE_DETECTORS: "env,host,os"
-#  OTEL_SERVICE_NAME: "zerofiltre-blog-frontend-sodikfatayo"
+  OTEL_SERVICE_NAME: "zerofiltre-blog-frontend-sodikfatayo"
 ---
 apiVersion: v1
 kind: Secret
@@ -70,10 +71,10 @@ spec:
                 name: zerofiltre-blog-frontend-sodikfatayo
           resources:
             requests:
-              cpu: 0.1
+              cpu: "0.1"
               memory: '50Mi'
             limits:
-              cpu: 0.5
+              cpu: "0.5"
               memory: 512Mi
           livenessProbe:
             tcpSocket:
@@ -94,28 +95,28 @@ spec:
       targetPort: http-port
   selector:
     app: zerofiltre-blog-frontend-sodikfatayo
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  namespace: sodikfatayo
-  name: zerofiltre-blog-frontend-sodikfatayo
-  annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
-    cert-manager.io/cluster-issuer: letsencrypt-prod
-spec:
-  rules:
-    - host: sodikfatayo-blog.zerofiltre.tech
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: zerofiltre-blog-frontend-sodikfatayo
-                port:
-                  number: 80
-  tls:
-    - hosts:
-        - sodikfatayo-blog.zerofiltre.tech
-      secretName: zerofiltre-blog-frontend-sodikfatayo-cert
+# ---
+# apiVersion: networking.k8s.io/v1
+# kind: Ingress
+# metadata:
+#   namespace: sodikfatayo
+#   name: zerofiltre-blog-frontend-sodikfatayo
+#   annotations:
+#     nginx.ingress.kubernetes.io/rewrite-target: /
+#     cert-manager.io/cluster-issuer: letsencrypt-prod
+# spec:
+#   rules:
+#     - host: sodikfatayo-blog.zerofiltre.tech
+#       http:
+#         paths:
+#           - path: /
+#             pathType: Prefix
+#             backend:
+#               service:
+#                 name: zerofiltre-blog-frontend-sodikfatayo
+#                 port:
+#                   number: 80
+#   tls:
+#     - hosts:
+#         - sodikfatayo-blog.zerofiltre.tech
+#       secretName: zerofiltre-blog-frontend-sodikfatayo-cert
